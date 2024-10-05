@@ -13,7 +13,11 @@
 <div class="default-margin auth-container">
   <h1 class="mb-l">{isRegistration ? "Register" : "Login"}</h1>
   <div class="form-and-social-login">
-    <form class="auth-form" method="POST">
+    <form
+      class="auth-form"
+      method="POST"
+      action={isRegistration ? "" : "/login/?/signInWithPassword"}
+    >
       {#if form && form.errors?.length}
         {#each form.errors as error}
           <div class="auth-error">
@@ -61,7 +65,12 @@
       {/if}
     </form>
     <div class="social-login">
-      <!-- Add a button here later -->
+      <form
+        method="POST"
+        action={isRegistration ? "/login/?/googleLogin" : "?/googleLogin"}
+      >
+        <Button type="submit">Log in using Google</Button>
+      </form>
     </div>
   </div>
 </div>
