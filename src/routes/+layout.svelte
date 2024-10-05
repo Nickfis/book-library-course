@@ -2,7 +2,6 @@
   import { Header } from "$components";
   import "./../app.css";
   import { invalidate } from "$app/navigation";
-  import { onMount } from "svelte";
 
   let { children, data } = $props();
   let { session, supabase, user } = $derived(data);
@@ -17,7 +16,8 @@
     return () => data.subscription.unsubscribe();
   });
 
-  $inspect(session)
+  $inspect(session);
+  $inspect(user);
 </script>
 
 <Header />
