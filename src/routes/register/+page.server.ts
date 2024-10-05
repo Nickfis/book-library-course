@@ -12,7 +12,7 @@ interface ReturnObject {
 }
 
 export const actions = {
-  default: async ({ request }) => {
+  default: async ({ request, locals: { supabase } }) => {
     const formData = await request.formData();
 
     const name = formData.get("name") as string;
@@ -49,11 +49,6 @@ export const actions = {
     }
 
     // Registration flow.
-    const supabase = createClient(
-      PUBLIC_SUPABASE_URL,
-      PUBLIC_SUPABASE_ANON_KEY
-    );
-
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -66,6 +61,7 @@ export const actions = {
       return fail(400, returnObject as any);
     }
 
-    redirect(303, "/private/dashboard");
+    // redirect(303, "/private/dashboard");
+    return returnObject;
   },
 };
