@@ -1,12 +1,10 @@
 <script lang="ts">
   import bookNestLogo from "$assets/app-logo.svg";
   import { Button } from "$components";
-  import { getUserState } from "$components/state/user-state.svelte";
+  import { getUserState } from "$lib/state/user-state.svelte";
 
   let userContext = getUserState();
   let { user } = $derived(userContext);
-
-  $inspect(user);
 </script>
 
 <header>
