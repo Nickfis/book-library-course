@@ -21,6 +21,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@iconify/svelte": "^4.0.2",
 		"@supabase/ssr": "^0.5.1",
 		"@supabase/supabase-js": "^2.45.4"
 	}
