@@ -4,7 +4,7 @@
   import { getUserState } from "$lib/state/user-state.svelte";
 
   let userContext = getUserState();
-  let { user } = $derived(userContext);
+  let { user, userName } = $derived(userContext);
 </script>
 
 <header>
@@ -24,7 +24,7 @@
     {:else}
       <ul>
         <li>
-          {user.email}
+          {userName}
         </li>
         <li>
           <Button isMenu={true} onclick={() => userContext.logout()}
