@@ -1,4 +1,5 @@
 import { goto } from "$app/navigation";
+import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 import type { Database } from "$lib/types/database.types";
 import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
 import { getContext, setContext } from "svelte";
@@ -159,6 +160,32 @@ export class UserState {
         }
       });
     }
+  }
+
+  async uploadBookCover(file: File, bookId: number) {
+    if (!this.user || !this.supabase) {
+      return;
+    }
+
+    const filePath = `${this.user.id}/${new Date()
+      .getTime()
+      .toString()
+      .slice(0, 6)}_${file.name}`;
+    const { error: uploadError } = await this.supabase.storage
+      .from("book-covers")
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.log(uploadError);
+      return console.log("Error uploading book cover");
+    }
+    const {
+      data: { publicUrl },
+    } = this.supabase.storage.from("book-covers").getPublicUrl(filePath);
+
+    console.log({ publicUrl });
+
+    this.updateBook(bookId, { cover_image: publicUrl });
   }
 
   async logout() {
