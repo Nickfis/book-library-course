@@ -74,3 +74,40 @@
         </div>
     </div>
 </div>
+
+<style>
+    .book-container {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .book-info {
+        width: 50%;
+    }
+
+    .book-cover {
+        width: 40%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        border-radius: 15px;
+        min-height: 400px;
+        max-width: 350px;
+        margin-left: 80px;
+    }
+
+    .book-cover img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+    }
+
+    .add-cover {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
