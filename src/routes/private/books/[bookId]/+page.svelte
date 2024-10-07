@@ -17,7 +17,7 @@
   let author = $state(book.author);
   let description = $state(book.description || "");
   let genre = $state(book.genre || "");
-  
+
   function goBack() {
     history.back();
   }
@@ -141,7 +141,7 @@
         border: 1px solid black;
         border-radius: 15px;
         min-height: 400px;
-        max-width: 350px;
+        max-width: 450px;
         margin-left: 80px;
     }
 
@@ -158,4 +158,28 @@
         justify-content: center;
         align-items: center;
     }
+
+    .input {
+        padding: 8px 4px;
+        width: 100%;
+    }
+
+    .textarea {
+        width: 100%;
+    }
+
+    .input-title {
+        font-size: 60px;
+        font-weight: bold;
+        font-family: "EB Garamond", serif;
+    }
+
+    .input-author {
+        display: flex;
+        align-items: center;
+    }
+    .input-author p {
+        margin-right: 8px;
+    }
+
 </style>
