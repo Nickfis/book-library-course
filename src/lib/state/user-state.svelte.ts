@@ -1,4 +1,5 @@
 import { goto } from "$app/navigation";
+import { PUBLIC_SUPABASE_URL } from "$env/static/public";
 import type { Database } from "$lib/types/database.types";
 import type { Session, SupabaseClient, User } from "@supabase/supabase-js";
 import { getContext, setContext } from "svelte";
@@ -73,7 +74,28 @@ export class UserState {
       return;
     }
 
-    this.allBooks = booksResponse.data;
+    this.allBooks = await Promise.all(
+      booksResponse.data.map(async (book) => {
+        // If the book has a cover image, generate the signed URL
+        if (
+          book.cover_image &&
+          book.cover_image.startsWith(PUBLIC_SUPABASE_URL) &&
+          this.supabase
+        ) {
+          const bucketPath = `${PUBLIC_SUPABASE_URL}/storage/v1/object/public/book-covers/`;
+          const filePath = book.cover_image.split(bucketPath)[1];
+          const { data: signedUrlData } = await this.supabase.storage
+            .from("book-covers")
+            .createSignedUrl(filePath, 3600); // Signed URL valid for 1 hour
+
+          if (signedUrlData) {
+            book.cover_image = signedUrlData.signedUrl;
+          }
+        }
+        return book;
+      })
+    );
+
     this.userName = userNamesResponse.data.name;
   }
 
@@ -153,6 +175,54 @@ export class UserState {
           return {
             ...book,
             ...updateObject,
+          };
+        } else {
+          return book;
+        }
+      });
+    }
+  }
+
+  async uploadBookCover(file: File, bookId: number) {
+    if (!this.user || !this.supabase) {
+      return;
+    }
+
+    const filePath = `${this.user.id}/${file.name}`;
+    const { error: uploadError } = await this.supabase.storage
+      .from("book-covers")
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.log(uploadError);
+      return console.log("Error uploading book cover");
+    }
+
+    const {
+      data: { publicUrl },
+    } = this.supabase.storage.from("book-covers").getPublicUrl(filePath);
+
+    const { status, error: updateError } = await this.supabase
+      .from("books")
+      .update({
+        cover_image: publicUrl,
+      })
+      .eq("id", bookId);
+
+    if (status !== 204 || updateError) {
+      return console.log("Error updating given book with cover image.");
+    }
+
+    const { data } = await this.supabase.storage
+      .from("book-covers")
+      .createSignedUrl(filePath, 3600);
+
+    if (data?.signedUrl) {
+      this.allBooks = this.allBooks.map((book) => {
+        if (book.id === bookId) {
+          return {
+            ...book,
+            cover_image: data?.signedUrl,
           };
         } else {
           return book;
