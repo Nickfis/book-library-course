@@ -40,6 +40,7 @@
     flex-direction: column;
     width: 100%;
     min-width: 360px;
+    width: 360px;
     height: 300px;
     max-width: 450px;
     border-radius: 12px;
