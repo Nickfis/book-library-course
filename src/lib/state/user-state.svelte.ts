@@ -221,16 +221,32 @@ export class UserState {
       throw new Error(error.message);
     } else {
       await this.fetchUserData();
-      // const { data } = await this.supabase
-      //   .from("books")
-      //   .select("*")
-      //   .eq("user_id", userId);
+    }
+  }
 
-      // if (!data) {
-      //   throw new Error("Could not retrieve all books for user");
-      // }
+  async updateAccountData(email: string, userName: string) {
+    if (!this.session) {
+      return;
+    }
 
-      // this.allBooks = data;
+    try {
+      const response = await fetch("/api/update-account", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.session.access_token}`,
+        },
+        body: JSON.stringify({
+          email,
+          userName,
+        }),
+      });
+
+      if (response.ok) {
+        this.userName = userName;
+      }
+    } catch (error) {
+      console.log(`Failed to delete account:`, error);
     }
   }
 

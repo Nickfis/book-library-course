@@ -4,8 +4,8 @@
 
   let userContext = getUserState();
   let userName = $state(userContext.userName || "");
-  let isEditMode = $state(true);
   let email = $state(userContext.user?.email || "");
+  let isEditMode = $state(false);
 
   let averageRating = $derived.by(() => {
     const booksWithRating = userContext.allBooks.filter((book) => book.rating);
@@ -28,6 +28,13 @@
       userName = userContext.userName;
     }
   });
+
+  async function toggleEditModeAndSaveToDatabase() {
+    if (isEditMode) {
+      await userContext.updateAccountData(email, userName);
+    }
+    isEditMode = !isEditMode;
+  }
 </script>
 
 <div class="settings-page">
@@ -47,7 +54,7 @@
       <h3>{email}</h3>
     {/if}
     <div class="buttons-container mt-l">
-      <Button isSecondary={true} onclick={() => console.log("edit mode?")}>
+      <Button isSecondary={true} onclick={toggleEditModeAndSaveToDatabase}>
         {isEditMode ? "Save changes" : "Edit"}
       </Button>
       <Button isDanger={true} onclick={() => console.log("delete account")}
