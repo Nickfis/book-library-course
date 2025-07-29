@@ -60,7 +60,7 @@
         </p>
       {:else}
         <p class="auth-hint mt-s">
-          Do not have an account yet? <a href="/register">Log In.</a>
+          Do not have an account yet? <a href="/register">Register.</a>
         </p>
       {/if}
     </form>
