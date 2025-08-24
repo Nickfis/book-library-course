@@ -94,7 +94,7 @@ export class UserState {
       .filter((book) => !book.started_reading_on)
       .toSorted(
         (a, z) =>
-          new Date(z.created_at).getTime() - new Date(a.created_at).getTime()
+          new SvelteDate(z.created_at).getTime() - new SvelteDate(a.created_at).getTime()
       )
       .slice(0, 9);
   }
